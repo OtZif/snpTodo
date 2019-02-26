@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ToDo</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="stylesheet" href="css/custom-reset.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<h1 class="title">todos</h1>
+	<section class="todo">
+		<header class="header">
+			<input type="text" class="header--new-task" id="newTask" placeholder="What needs to be done?" autofocus>
+		</header>
+		<main class="main">
+			<input id="toggle-all" class="toggle-all" type="checkbox">
+			<label for="toggle-all" class="pen"></label>
+			<ul class="main--list" id="mainList">
+			</ul>
+		</main>
+		<footer class="footer">
+			<span id="ssds">0 item left</span>
+			<div class="control">
+				<a href="#" class="control--item selected" id="filter-all">All</a>
+				<a href="javascript:void(0);" class="control--item" id="filter-active">Active</a>
+				<a href="javascript:void(0);" class="control--item" id="filter-completed">Completed</a>
+			</div>
+			<button class="clear-completed" id="clearCompleted">Clear completed</button>
+		</footer>
+	</section>
+	<script src="js/main.js"></script>
+</body>
+</html>
