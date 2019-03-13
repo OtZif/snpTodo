@@ -1,6 +1,13 @@
+let mass = JSON.parse(localStorage.getItem('todo')) == null ? [] : JSON.parse(localStorage.getItem('todo'));
+
 function $(query) {
   return document.querySelector(query);
 }
+
+function $All(query) {
+  return document.querySelectorAll(query);
+}
+
 // Счетчик задач
 function countTasks() {
   const xx = $('#mainList').getElementsByTagName('li').length;
@@ -12,14 +19,13 @@ function countTasks() {
   } else if (xx > 1 || xx < 1) {
     cdx.innerHTML = `${xx - dxq} items left`;
   }
-
   return cdx;
 }
 
 // Карандаш выделения всехзадач
 function modeOnToogle() {
-  const allLi = document.getElementsByTagName('li');
-  const liChecked = document.getElementsByClassName('checked');
+  const allLi = $All('li');
+  const liChecked = $All('.checked');
 
   if (allLi.length === 0) {
     $('#toggle-all').checked = false;
@@ -41,46 +47,45 @@ function modeOnToogle() {
 }
 
 // Фильтры
-
-const tagLi = document.getElementsByTagName('li');
 function changeMode() {
-  const massClass = document.getElementsByClassName('control--item');
-
-  for (let i = 0; i < massClass.length; i++) {
-    if (massClass[i].classList.contains('selected')) {
-      massClass[i].classList.remove('selected');
+  const massClass = $All('.control--item');
+  massClass.forEach(function (element) {
+    if (element.classList.contains('selected')) {
+      element.classList.remove('selected');
     }
-  }
+  });
 }
 
 // Все задачи
 function getAllTasks() {
-  for (let i = 0; i < tagLi.length; i++) {
-    tagLi[i].style.display = 'block';
-  }
+  const tagLi = $All('li');
+  tagLi.forEach(element => element.style.display = 'block');
 }
-
 
 // Активные задачи
 function getActiveTasks() {
-  for (let i = 0; i < tagLi.length; i++) {
-    if (tagLi[i].classList.contains('checked')) {
-      tagLi[i].style.display = 'none';
+  const tagLi = $All('li');
+
+  tagLi.forEach(function (element) {
+    if (element.classList.contains('checked')) {
+      element.style.display = 'none';
     } else {
-      tagLi[i].style.display = 'block';
+      element.style.display = 'block';
     }
-  }
+  });
 }
 
 // Завершенные задачи
 function getCompletedTasks() {
-  for (let i = 0; i < tagLi.length; i++) {
-    if (tagLi[i].classList.contains('checked') !== true) {
-      tagLi[i].style.display = 'none';
+  const tagLi = $All('li');
+
+  tagLi.forEach(function (element) {
+    if (element.classList.contains('checked') !== true) {
+      element.style.display = 'none';
     } else {
-      tagLi[i].style.display = 'block';
+      element.style.display = 'block';
     }
-  }
+  });
 }
 
 // Все задачи
@@ -106,14 +111,13 @@ $('#filter-completed').addEventListener('click', function () {
 
 // Показ кнопки - clearCompleted
 function clearCompleted() {
-  const listItems = document.getElementsByTagName('li');
+  const listItems = $All('li');
   let x = 0;
-
-  for (let i = 0; i < listItems.length; i++) {
-    if (listItems[i].classList.contains('checked') === true) {
+  listItems.forEach(function (element) {
+    if (element.classList.contains('checked') === true) {
       x += 1;
     }
-  }
+  });
   if (x > 0) {
     $('#clearCompleted').style.visibility = 'visible';
   } else {
@@ -124,26 +128,24 @@ function clearCompleted() {
 // Выбор всех задач
 function toggleAll() {
   function check() {
-    const itemToggle = document.getElementsByClassName('toggle');
-    const thatli = document.getElementsByTagName('li');
+    const itemToggle = $All('.toggle');
+    const thatLi = $All('li');
 
-    for (let i = 0; i < itemToggle.length; i++) {
-      itemToggle[i].checked = true;
-      thatli[i].classList.add('checked');
-    }
+    itemToggle.forEach(element => element.checked = true);
+    thatLi.forEach(element => element.classList.add('checked'));
+
     mass.forEach(function (item) {
       item.check = true;
     });
   }
 
   function uncheck() {
-    const itemToggle = document.getElementsByClassName('toggle');
-    const thatli = document.getElementsByTagName('li');
+    const itemToggle = $All('.toggle');
+    const thatLi = $All('li');
 
-    for (let i = 0; i < itemToggle.length; i++) {
-      itemToggle[i].checked = false;
-      thatli[i].classList.remove('checked');
-    }
+    itemToggle.forEach(element => element.checked = false);
+    thatLi.forEach(element => element.classList.remove('checked'));
+
     mass.forEach(function (item) {
       item.check = false;
     });
@@ -162,15 +164,14 @@ function toggleAll() {
     if ($('#filter-completed').classList.contains('selected')) {
       getCompletedTasks();
     }
+
     countTasks();
     clearCompleted();
     addLocal();
   });
 }
 
-let mass = JSON.parse(localStorage.getItem('todo')) == null ? [] : JSON.parse(localStorage.getItem('todo'));
-
-function generateItems() {
+function generateItems(mass) {
   const element = $('#newTask');
 
   mass.forEach(function (item) {
@@ -208,6 +209,7 @@ function addList(isOriginal) {
   const newInp = document.createElement('input');
   const newLab = document.createElement('label');
   const newButt = document.createElement('button');
+
   newLi.setAttribute('data-stamp', (new Date()).valueOf());
   newLi.dataset.stamp = (new Date()).valueOf();
   newButt.className = 'destroy';
@@ -369,19 +371,20 @@ $('#newTask').addEventListener('change', function (event) {
 
 // Удаление Завершенных задач
 $('#clearCompleted').addEventListener('click', function () {
-  const compitedLi = document.getElementsByTagName('li');
+  const completedLi = $All('li');
 
-  for (let j = 0; j < compitedLi.length; j++) {
-    if (compitedLi[j].classList.contains('checked')) {
-      const stamp = compitedLi[j].dataset.stamp;
+  completedLi.forEach(function (item) {
+    if (item.classList.contains('checked')) {
+      const stamp = item.dataset.stamp;
+
       mass = mass.filter(function (element) {
         return element.timeStamp != stamp;
       });
+
       addLocal();
-      compitedLi[j].remove();
-      j -= 1;
+      item.remove();
     }
-  }
+  });
 
   clearCompleted();
   modeOnToogle();
@@ -394,4 +397,5 @@ function addLocal() {
 countTasks();
 toggleAll();
 modeOnToogle();
-generateItems();
+generateItems(mass);
+
